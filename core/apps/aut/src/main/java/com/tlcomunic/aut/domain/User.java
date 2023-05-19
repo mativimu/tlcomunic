@@ -17,10 +17,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name="tlcomunic_user")
 public class User implements UserDetails {
@@ -49,16 +53,16 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = "enable", nullable = false)
-    private boolean enable = true;
+    private boolean enable;
 
     @Column(name = "account_non_expired", nullable = false)
-    private boolean accountNonExpired = true;
+    private boolean accountNonExpired;
 
     @Column(name = "account_non_locked", nullable = false)
-    private boolean accountNonLocked = true;
+    private boolean accountNonLocked;
 
     @Column(name = "credentials_non_expired", nullable = false)
-    private boolean credentialsNonExpired = true;
+    private boolean credentialsNonExpired;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -97,6 +101,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.enable;
     }
-
-
 }
