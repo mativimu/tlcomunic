@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AutApplication<aut>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.tlcomunic.aut.AutApplication",
+            "projectName": "aut",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
