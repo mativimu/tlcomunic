@@ -23,7 +23,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PutMapping("/delete")
+    @PutMapping("/update")
     public ResponseEntity<?> update() {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
