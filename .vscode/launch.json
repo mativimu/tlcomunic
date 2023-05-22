@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ArmApplication",
+            "request": "launch",
+            "mainClass": "com.tlcomunic.microservice.arm.ArmApplication",
+            "projectName": "arm"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-AutApplication<aut>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
