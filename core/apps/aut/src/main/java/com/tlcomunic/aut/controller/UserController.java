@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
     
-    @GetMapping("/authentication")
+    @GetMapping("/authenticate")
     public ResponseEntity<?> authenticate() {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
