@@ -15,21 +15,21 @@ public class UserController {
     
     @GetMapping("/authenticate")
     public ResponseEntity<?> authenticate() {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body("Get:: authenticate");
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register() {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body("Post:: register");
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> update() {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body("Put:: update");
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete() {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body("Delete:: delete");
     }
 }

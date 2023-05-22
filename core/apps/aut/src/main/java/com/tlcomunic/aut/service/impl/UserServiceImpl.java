@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     public User updateBasicInfo(String firstName, String lastName, String email, String password, String role) {
 
         if (firstName == null || lastName == null || email == null || password == null || role == null)
-            throw new NullPointerException("There is null parameters");
+            throw new NullPointerException("There are null parameters");
 
         Optional<User> _user = userRepository.findByEmail(email);
 
