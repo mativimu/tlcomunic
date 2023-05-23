@@ -6,10 +6,12 @@ import java.time.temporal.ChronoUnit;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.stereotype.Service;
 
 import com.tlcomunic.aut.domain.User;
 import com.tlcomunic.aut.service.TokenService;
 
+@Service
 public class JsonWebTokenService implements TokenService {
 
     private JwtEncoder encoder;
