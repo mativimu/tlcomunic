@@ -20,19 +20,23 @@ import com.tlcomunic.aut.dto.RegisterInput;
 import com.tlcomunic.aut.dto.RegisterOutput;
 import com.tlcomunic.aut.service.UserService;
 import com.tlcomunic.aut.service.impl.JsonWebTokenService;
+import com.tlcomunic.aut.util.DTOFactory;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     private UserService userService;
+
+    private DTOFactory dtoFactory;
     
     private JsonWebTokenService jsonWebTokenService;
     
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
-    public UserController(final UserService userService ,final JsonWebTokenService jsonWebTokenService) {
+    public UserController(final UserService userService, final DTOFactory dtoFactory, final JsonWebTokenService jsonWebTokenService) {
         this.userService = userService;
+        this.dtoFactory = dtoFactory;
         this.jsonWebTokenService = jsonWebTokenService;
     }
 
@@ -58,19 +62,8 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterInput inputDTO) {
 
-        // DTOFactory implementation (filter nulls)
-        User user = User.builder()
-            .firstName(inputDTO.getFirstName())
-            .lastName(inputDTO.getLastName())
-            .email(inputDTO.getEmail())
-            .password(inputDTO.getPassword())
-            .enable(inputDTO.isEnable())
-            .accountNonExpired(inputDTO.isAccountNonExpired())
-            .accountNonLocked(inputDTO.isAccountNonLocked())
-            .credentialsNonExpired(inputDTO.isCredentialsNonExpired())
-            .role(Role.valueOf(inputDTO.getRole()))
-            .build();
-
+        User user = dtoFactory.getUser(inputDTO);
+        
         User _user = userService.create(user);
 
         String token = jsonWebTokenService.generate(_user);
