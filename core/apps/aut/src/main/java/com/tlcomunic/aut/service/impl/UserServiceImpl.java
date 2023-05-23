@@ -18,26 +18,42 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+    
     @Override
     public User create(User user) {
-
+        
         Optional<User> _user = userRepository.findByEmail(user.getEmail());
 
         if (_user.isPresent())
             throw new RuntimeException("User already exists");
-
+            
         else
             return userRepository.save(user);
     }
-
+    
     @Override
     public User getByEmail(String email) {
+        
+        Optional<User> _user = userRepository.findByEmail(email);
+
+        if (!_user.isPresent())
+            throw new RuntimeException("User not found");
+        else
+            return _user.get();
+
+    }
+    
+    @Override
+    public User getByCredentials(String email, String password) {
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
             throw new RuntimeException("User not found");
+
+        else if (!_user.get().getPassword().equals(password))
+            throw new RuntimeException("Incorrect password");
+        
         else
             return _user.get();
 
