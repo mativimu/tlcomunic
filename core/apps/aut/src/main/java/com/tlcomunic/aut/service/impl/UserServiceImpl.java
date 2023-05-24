@@ -11,7 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tlcomunic.aut.domain.User;
 import com.tlcomunic.aut.repository.UserRepository;
 import com.tlcomunic.aut.service.UserService;
+
+import lombok.var;
+
 import com.tlcomunic.aut.enums.Role;
+import com.tlcomunic.aut.exception.IncorrectPasswordException;
+import com.tlcomunic.aut.exception.NullValuesException;
+import com.tlcomunic.aut.exception.UserAlreadyExistsException;
+import com.tlcomunic.aut.exception.UserNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,7 +37,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> _user = userRepository.findByEmail(user.getEmail());
 
         if (_user.isPresent())
-            throw new RuntimeException("User already exists");
+            throw new UserAlreadyExistsException();
             
         else
             return userRepository.save(user);
@@ -40,12 +47,12 @@ public class UserServiceImpl implements UserService {
     public User getByEmail(String email) {
         
         if (email == null)
-            throw new RuntimeException("There are null values");
+            throw new NullValuesException();
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
         else
             return _user.get();
     }
@@ -54,15 +61,15 @@ public class UserServiceImpl implements UserService {
     public User getByCredentials(String email, String password) {
 
         if (email == null || password == null)
-            throw new RuntimeException("There are null values");
+            throw new NullValuesException();
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
 
         else if (!_user.get().getPassword().equals(password))
-            throw new RuntimeException("Incorrect password");
+            throw new IncorrectPasswordException();
         
         else
             return _user.get();
@@ -73,12 +80,12 @@ public class UserServiceImpl implements UserService {
     public User updateEmail(String oldEmail, String newEmail) {
         
         if (oldEmail == null)
-            throw new RuntimeException("There are null values");
+            throw new NullValuesException();
 
         Optional<User> _user = userRepository.findByEmail(oldEmail);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
 
         else {
             _user.get().setEmail(newEmail);
@@ -92,12 +99,12 @@ public class UserServiceImpl implements UserService {
     public User updatePassword(String email, String password) {
 
         if (email == null || password == null)
-            throw new RuntimeException("There are null values");
+            throw new NullValuesException();
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
         
         else {
             _user.get().setPassword(password);
@@ -111,12 +118,12 @@ public class UserServiceImpl implements UserService {
     public User updateName(String email, String firstName, String lastName) {
 
         if (email == null || firstName == null || lastName == null)
-            throw new RuntimeException("There are null values");
+            throw new NullValuesException();
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
     
         else {
             _user.get().setFirstName(firstName);
@@ -131,12 +138,12 @@ public class UserServiceImpl implements UserService {
     public User updateRole(String email, Role role) {
 
         if (email == null || role == null )
-            throw new RuntimeException("There are null values");
+            throw new NullValuesException();
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
     
         else {
             _user.get().setRole(role);
@@ -150,12 +157,12 @@ public class UserServiceImpl implements UserService {
     public User enable(String email) {
         
         if (email == null)
-            throw new RuntimeException("There are null values");
+            throw new NullValuesException();
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
 
         else {
             _user.get().setEnable(true);
@@ -169,12 +176,12 @@ public class UserServiceImpl implements UserService {
     public User disable(String email) {
         
         if (email == null)
-            throw new RuntimeException("There are null values");
+            throw new NullValuesException();
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
 
         else {
             _user.get().setEnable(false);
@@ -190,7 +197,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
-            throw new RuntimeException("User not found");
+            throw new UserNotFoundException();
 
         else
             LOG.info("User[{}] has been deleted", _user.get().getId());

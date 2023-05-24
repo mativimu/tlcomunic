@@ -45,6 +45,20 @@ public class UserController {
         this.dtoFactory = dtoFactory;
         this.jsonWebTokenService = jsonWebTokenService;
     }
+    
+        @PostMapping("/register")
+        public ResponseEntity<?> register(@RequestBody RegisterInput inputDTO) {
+    
+            User user = userService.create(dtoFactory.getUser(inputDTO));
+    
+            LOG.info("User[{}] created as {}", String.valueOf(user.getId()), user.getRole());
+    
+            String token = jsonWebTokenService.generate(user);
+            String code = "#".concat(user.getRole().name().substring(0, 2));
+            RegisterOutput outputDTO = RegisterOutput.builder().code(code).token(token).build();
+    
+            return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+        }
 
     @GetMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthInput inputDTO) {
@@ -56,20 +70,6 @@ public class UserController {
         String token = jsonWebTokenService.generate(user);
         String scope = "#00".concat(user.getRole().name().substring(0, 2));
         AuthOutput outputDTO = AuthOutput.builder().scope(scope).token(token).build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterInput inputDTO) {
-
-        User user = userService.create(dtoFactory.getUser(inputDTO));
-
-        LOG.info("User[{}] created as {}", String.valueOf(user.getId()), user.getRole());
-
-        String token = jsonWebTokenService.generate(user);
-        String code = "#".concat(user.getRole().name().substring(0, 2));
-        RegisterOutput outputDTO = RegisterOutput.builder().code(code).token(token).build();
 
         return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
     }
