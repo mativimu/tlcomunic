@@ -44,7 +44,7 @@ public class User implements UserDetails {
         generator = "uid_sequence")
     private Long id;
 
-    @Column(name = "first_name", unique = true, nullable = false, length = 25)
+    @Column(name = "first_name", nullable = false, length = 25)
     private String firstName;
 
     @Column(name = "last_name", nullable = false, length = 25)
