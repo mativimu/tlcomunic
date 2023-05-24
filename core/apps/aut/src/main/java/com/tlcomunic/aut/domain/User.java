@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="tlcomunic_user")
+@Table(name="_user")
 public class User implements UserDetails {
 
     @Id
@@ -42,16 +42,16 @@ public class User implements UserDetails {
         generator = "uid_sequence")
     private Long id;
 
-    @Column(name = "first_name", nullable = false, length = 25)
+    @Column(name = "first_name", unique = true, nullable = false, length = 25)
     private String firstName;
 
     @Column(name = "last_name", nullable = false, length = 25)
     private String lastName;
 
-    @Column(name = "email", nullable = false, length = 64)
+    @Column(name = "email", unique = true, nullable = false, length = 64)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 64)
+    @Column(name = "password", unique = true, nullable = false, length = 64)
     private String password;
 
     @Column(name = "enable", nullable = false)
