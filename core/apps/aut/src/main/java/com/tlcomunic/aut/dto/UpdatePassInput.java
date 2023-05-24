@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class DeleteUserOutput {
+public class UpdatePassInput {
     
-    private String message;
-    
+    private String password;
+
 }

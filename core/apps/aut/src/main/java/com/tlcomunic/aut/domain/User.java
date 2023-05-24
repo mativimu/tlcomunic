@@ -52,24 +52,25 @@ public class User implements UserDetails {
 
     @Column(name = "email", unique = true, nullable = false, length = 64)
     private String email;
-
+    
     @Column(name = "password", unique = true, nullable = false, length = 64)
     private String password;
-
+    
     @Column(name = "enable", nullable = false)
     private boolean enable;
 
-    @Column(name = "account_non_expired", nullable = false)
-    private boolean accountNonExpired;
-
-    @Column(name = "account_non_locked", nullable = false)
-    private boolean accountNonLocked;
-
-    @Column(name = "credentials_non_expired", nullable = false)
-    private boolean credentialsNonExpired;
-
     @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
     private Role role;
+
+    @Column(name = "account_non_expired")
+    private boolean accountNonExpired = true;
+
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked = true;
+
+    @Column(name = "credentials_non_expired")
+    private boolean credentialsNonExpired = true;
 
     @Column(name = "updated_at")
     @DateTimeFormat(pattern = "dd-MM-yyyy")

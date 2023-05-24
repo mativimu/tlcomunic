@@ -1,5 +1,7 @@
 package com.tlcomunic.aut;
 
+import java.util.Date;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,10 +32,12 @@ public class AutApplication {
 					"mativimu.dev@gmail.com",
 					"d7f3fa33e69a29d562d36f95b5a990a6bf4db44ceb2dc70b7bb0750f552b45dc",
 					true,
+					Role.ADMIN,
 					true,
 					true,
 					true,
-					Role.ADMIN
+					new Date(),
+					new Date()
 				)
 			);
 		};

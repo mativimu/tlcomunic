@@ -38,17 +38,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByEmail(String email) {
         
+        if (email == null)
+            throw new RuntimeException("There are null values");
+
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
             throw new RuntimeException("User not found");
         else
             return _user.get();
-
     }
     
     @Override
     public User getByCredentials(String email, String password) {
+
+        if (email == null || password == null)
+            throw new RuntimeException("There are null values");
 
         Optional<User> _user = userRepository.findByEmail(email);
 
@@ -60,28 +65,113 @@ public class UserServiceImpl implements UserService {
         
         else
             return _user.get();
-
     }
 
+    @Transactional
     @Override
-    public User updateBasicInfo(String firstName, String lastName, String email, String password, String role) {
+    public User updateEmail(String oldEmail, String newEmail) {
+        
+        if (oldEmail == null)
+            throw new RuntimeException("There are null values");
 
-        if (firstName == null || lastName == null || email == null || password == null || role == null)
-            throw new NullPointerException("There are null parameters");
+        Optional<User> _user = userRepository.findByEmail(oldEmail);
+
+        if (!_user.isPresent())
+            throw new RuntimeException("User not found");
+
+        else {
+            _user.get().setEmail(newEmail);
+            return userRepository.save(_user.get());
+        }
+    }
+
+    @Transactional
+    @Override
+    public User updatePassword(String email, String password) {
+
+        if (email == null || password == null)
+            throw new RuntimeException("There are null values");
 
         Optional<User> _user = userRepository.findByEmail(email);
 
-        if (!_user.isPresent()){
-            throw new RuntimeException("");
-        } else {
+        if (!_user.isPresent())
+            throw new RuntimeException("User not found");
+        
+        else {
+            _user.get().setPassword(password);
+            return userRepository.save(_user.get());
+        }
+    }
+
+    @Transactional
+    @Override
+    public User updateName(String email, String firstName, String lastName) {
+
+        if (email == null || firstName == null || lastName == null)
+            throw new RuntimeException("There are null values");
+
+        Optional<User> _user = userRepository.findByEmail(email);
+
+        if (!_user.isPresent())
+            throw new RuntimeException("User not found");
+    
+        else {
             _user.get().setFirstName(firstName);
             _user.get().setLastName(lastName);
-            _user.get().setEmail(email);
-            _user.get().setPassword(password);
-            _user.get().setRole(Role.valueOf(role));
+            return userRepository.save(_user.get());
+        }
+    }
 
-            LOG.info("User[{}] has been updated", _user.get().getId());
+    @Transactional
+    @Override
+    public User updateRole(String email, Role role) {
 
+        if (email == null || role == null )
+            throw new RuntimeException("There are null values");
+
+        Optional<User> _user = userRepository.findByEmail(email);
+
+        if (!_user.isPresent())
+            throw new RuntimeException("User not found");
+    
+        else {
+            _user.get().setRole(role);
+            return userRepository.save(_user.get());
+        }
+    }
+
+    @Transactional
+    @Override
+    public User enable(String email) {
+        
+        if (email == null)
+            throw new RuntimeException("There are null values");
+
+        Optional<User> _user = userRepository.findByEmail(email);
+
+        if (!_user.isPresent())
+            throw new RuntimeException("User not found");
+
+        else {
+            _user.get().setEnable(true);
+            return userRepository.save(_user.get());
+        }
+    }
+
+    @Transactional
+    @Override
+    public User disable(String email) {
+        
+        if (email == null)
+            throw new RuntimeException("There are null values");
+
+        Optional<User> _user = userRepository.findByEmail(email);
+
+        if (!_user.isPresent())
+            throw new RuntimeException("User not found");
+
+        else {
+            _user.get().setEnable(false);
             return userRepository.save(_user.get());
         }
     }
@@ -98,7 +188,6 @@ public class UserServiceImpl implements UserService {
         else
             LOG.info("User[{}] has been deleted", _user.get().getId());
             userRepository.deleteByEmail(email);
-
     }
 
 }
