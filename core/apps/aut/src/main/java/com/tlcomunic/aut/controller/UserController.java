@@ -20,8 +20,10 @@ import com.tlcomunic.aut.dto.DeleteUserInput;
 import com.tlcomunic.aut.dto.MessageOutput;
 import com.tlcomunic.aut.dto.RegisterInput;
 import com.tlcomunic.aut.dto.RegisterOutput;
+import com.tlcomunic.aut.dto.UpdateEmailInput;
 import com.tlcomunic.aut.dto.UpdateNameInput;
 import com.tlcomunic.aut.dto.UpdatePassInput;
+import com.tlcomunic.aut.dto.UpdateRoleInput;
 import com.tlcomunic.aut.service.UserService;
 import com.tlcomunic.aut.service.impl.JsonWebTokenService;
 import com.tlcomunic.aut.util.DTOFactory;
@@ -70,32 +72,90 @@ public class UserController {
         RegisterOutput outputDTO = RegisterOutput.builder().code(code).token(token).build();
 
         return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-        
     }
 
     @PutMapping("/update/email")
-    public ResponseEntity<?> updateEmail(@RequestParam(name="email") String email) {
-        return ResponseEntity.status(HttpStatus.OK).body("Put:: update");
+    public ResponseEntity<?> updateEmail(@RequestParam(name="email") String email, UpdateEmailInput inputDTO) {
+
+        User user = userService.updateEmail(email, inputDTO.getEmail());
+
+        LOG.info("User[{}] updated on email", String.valueOf(user.getId()), user.getRole());
+
+        MessageOutput outputDTO = MessageOutput.builder()
+            .message("Email updated successfully")
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
     }
 
     @PutMapping("/update/password")
     public ResponseEntity<?> updatePassowrd(@RequestParam(name="email") String email, @RequestBody UpdatePassInput inputDTO ) {
-        return ResponseEntity.status(HttpStatus.OK).body("Put:: update");
+
+        User user = userService.updatePassword(email, inputDTO.getPassword());
+
+        LOG.info("User[{}] updated on password", String.valueOf(user.getId()), user.getRole());
+
+        MessageOutput outputDTO = MessageOutput.builder()
+            .message("Password updated successfully")
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
     }
 
     @PutMapping("/update/name")
     public ResponseEntity<?> updateName(@RequestParam(name="email") String email, UpdateNameInput inputDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body("Put:: update");
-    }
 
-    @PutMapping("/update/disable")
-    public ResponseEntity<?> updateName(@RequestParam(name="email") String email, UpdateNameInput inputDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body("Put:: update");
+        User user = userService.updateName(email, inputDTO.getFisrtName(), inputDTO.getLastName());
+
+        LOG.info("User[{}] updated on name", String.valueOf(user.getId()), user.getRole());
+
+        MessageOutput outputDTO = MessageOutput.builder()
+            .message("Name updated successfully")
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);    
     }
 
     @PutMapping("/update/role")
-    public ResponseEntity<?> updateName(@RequestParam(name="email") String email, UpdateNameInput inputDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body("Put:: update");
+    public ResponseEntity<?> updateRole(@RequestParam(name="email") String email, UpdateRoleInput inputDTO) {
+
+        User user = userService.updateRole(email, inputDTO.getRole());
+
+        LOG.info("User[{}] updated on role", String.valueOf(user.getId()), user.getRole());
+
+        MessageOutput outputDTO = MessageOutput.builder()
+            .message("Role updated successfully")
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);    
+    }
+
+    @PutMapping("/enable")
+    public ResponseEntity<?> enable(@RequestParam(name="email") String email) {
+
+        User user = userService.enable(email);
+
+        LOG.info("User[{}] enable", String.valueOf(user.getId()), user.getRole());
+
+        MessageOutput outputDTO = MessageOutput.builder()
+            .message("User enable successfully")
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);    
+    }
+
+    @PutMapping("/disable")
+    public ResponseEntity<?> disable(@RequestParam(name="email") String email) {
+
+        User user = userService.disable(email);
+
+        LOG.info("User[{}] disable", String.valueOf(user.getId()), user.getRole());
+
+        MessageOutput outputDTO = MessageOutput.builder()
+            .message("User disable successfully")
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(outputDTO); 
     }
 
     @DeleteMapping("/delete")
