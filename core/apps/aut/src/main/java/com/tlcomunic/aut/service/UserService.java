@@ -12,6 +12,6 @@ public interface UserService {
 
     public User updateBasicInfo(String firstName, String lastName, String email, String password, String role);
     
-    public Boolean deleteByEmail(String email);
+    public void deleteByEmail(String email);
 
 }

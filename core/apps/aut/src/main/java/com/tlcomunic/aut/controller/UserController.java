@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tlcomunic.aut.domain.User;
 import com.tlcomunic.aut.dto.AuthInput;
 import com.tlcomunic.aut.dto.AuthOutput;
+import com.tlcomunic.aut.dto.DeleteUserInput;
+import com.tlcomunic.aut.dto.DeleteUserOutput;
 import com.tlcomunic.aut.dto.RegisterInput;
 import com.tlcomunic.aut.dto.RegisterOutput;
 import com.tlcomunic.aut.service.UserService;
@@ -44,7 +46,7 @@ public class UserController {
         
         User user = userService.getByCredentials(inputDTO.getEmail(), inputDTO.getPassword());
 
-        LOG.info("Token requested for user id[{}]",String.valueOf(user.getId()));
+        LOG.info("Token requested for User[{}]",String.valueOf(user.getId()));
         
         String token = jsonWebTokenService.generate(user);
         String scope = "#00".concat(user.getRole().name().substring(0, 2));
@@ -72,7 +74,16 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete() {
-        return ResponseEntity.status(HttpStatus.OK).body("Delete:: delete");
+    public ResponseEntity<?> delete(@RequestBody DeleteUserInput inputDTO) {
+
+        User user = userService.getByCredentials(inputDTO.getEmail(), inputDTO.getPassword());
+
+        userService.deleteByEmail(user.getEmail());
+
+        DeleteUserOutput outputDTO = DeleteUserOutput.builder()
+            .message("User deleted successfully")
+            .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
     }
 }

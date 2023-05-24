@@ -7,4 +7,7 @@ import lombok.Data;
 @Builder
 public class DeleteUserInput {
     
+    private String email;
+    private String password;
+    
 }

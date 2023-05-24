@@ -2,18 +2,22 @@ package com.tlcomunic.aut.service.impl;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tlcomunic.aut.domain.User;
 import com.tlcomunic.aut.repository.UserRepository;
 import com.tlcomunic.aut.service.UserService;
 import com.tlcomunic.aut.enums.Role;
 
-
 @Service
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(final UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -76,18 +80,25 @@ public class UserServiceImpl implements UserService {
             _user.get().setPassword(password);
             _user.get().setRole(Role.valueOf(role));
 
+            LOG.info("User[{}] has been updated", _user.get().getId());
+
             return userRepository.save(_user.get());
         }
     }
 
+    @Transactional
     @Override
-    public Boolean deleteByEmail(String email) {
+    public void deleteByEmail(String email) {
 
         Optional<User> _user = userRepository.findByEmail(email);
 
         if (!_user.isPresent())
             throw new RuntimeException("User not found");
+
         else
-            return userRepository.deleteByEmail(email);
+            LOG.info("User[{}] has been deleted", _user.get().getId());
+            userRepository.deleteByEmail(email);
+
     }
+
 }
