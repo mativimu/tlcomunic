@@ -1,4 +1,4 @@
-package com.tlcomunic.aut;
+package com.tlcomunic.aut.util;
 
 import java.sql.SQLException;
 
