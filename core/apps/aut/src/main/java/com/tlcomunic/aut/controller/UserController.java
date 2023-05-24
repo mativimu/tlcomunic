@@ -67,7 +67,7 @@ public class UserController {
 
     @GetMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthInput inputDTO) {
-        
+
         User user = userService.getByCredentials(inputDTO.getEmail(), inputDTO.getPassword());
 
         LOG.info("User[{}] authenticated",String.valueOf(user.getId()));

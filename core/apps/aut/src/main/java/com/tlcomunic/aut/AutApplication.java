@@ -27,10 +27,10 @@ public class AutApplication {
 			userRepository.save (
 				new User (
 					null,
-					"Matias",
-					"Vigo",
-					"mativimu.dev@gmail.com",
-					"d7f3fa33e69a29d562d36f95b5a990a6bf4db44ceb2dc70b7bb0750f552b45dc",
+					"mati",
+					"vimu",
+					"mativimu@gmail.com",
+					"e6808a56aad66cf89b43388ef3d0f021206594399dcd6c1b70d8382a1dae402b",
 					true,
 					Role.ADMIN,
 					true,

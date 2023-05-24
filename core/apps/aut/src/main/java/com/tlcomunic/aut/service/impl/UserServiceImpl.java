@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tlcomunic.aut.domain.User;
 import com.tlcomunic.aut.repository.UserRepository;
 import com.tlcomunic.aut.service.UserService;
-
+import com.tlcomunic.aut.util.PasswordHasher;
 import com.tlcomunic.aut.enums.Role;
 import com.tlcomunic.aut.exception.IncorrectPasswordException;
 import com.tlcomunic.aut.exception.NullValuesException;
@@ -42,6 +42,9 @@ public class UserServiceImpl implements UserService {
         else {
             user.setCreatedAt(new Date());
             user.setUpdatedAt(new Date());
+            user.setPassword(
+                PasswordHasher.hash(user.getPassword())
+            );
             return userRepository.save(user);
         }
     }
@@ -79,7 +82,7 @@ public class UserServiceImpl implements UserService {
         if (!_user.isPresent())
             throw new UserNotFoundException();
 
-        else if (!_user.get().getPassword().equals(password))
+        else if (!_user.get().getPassword().equals(PasswordHasher.hash(password)))
             throw new IncorrectPasswordException();
         
         else
@@ -118,7 +121,9 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException();
         
         else {
-            _user.get().setPassword(password);
+            _user.get().setPassword(
+                PasswordHasher.hash(_user.get().getPassword())
+            );
             _user.get().setUpdatedAt(new Date());
             return userRepository.save(_user.get());
         }
