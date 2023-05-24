@@ -1,5 +1,6 @@
 package com.tlcomunic.aut.service.impl;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -81,6 +82,7 @@ public class UserServiceImpl implements UserService {
 
         else {
             _user.get().setEmail(newEmail);
+            _user.get().setUpdatedAt(new Date());
             return userRepository.save(_user.get());
         }
     }
@@ -99,6 +101,7 @@ public class UserServiceImpl implements UserService {
         
         else {
             _user.get().setPassword(password);
+            _user.get().setUpdatedAt(new Date());
             return userRepository.save(_user.get());
         }
     }
@@ -118,6 +121,7 @@ public class UserServiceImpl implements UserService {
         else {
             _user.get().setFirstName(firstName);
             _user.get().setLastName(lastName);
+            _user.get().setUpdatedAt(new Date());
             return userRepository.save(_user.get());
         }
     }
@@ -136,6 +140,7 @@ public class UserServiceImpl implements UserService {
     
         else {
             _user.get().setRole(role);
+            _user.get().setUpdatedAt(new Date());
             return userRepository.save(_user.get());
         }
     }
@@ -154,6 +159,7 @@ public class UserServiceImpl implements UserService {
 
         else {
             _user.get().setEnable(true);
+            _user.get().setUpdatedAt(new Date());
             return userRepository.save(_user.get());
         }
     }
@@ -172,6 +178,7 @@ public class UserServiceImpl implements UserService {
 
         else {
             _user.get().setEnable(false);
+            _user.get().setUpdatedAt(new Date());
             return userRepository.save(_user.get());
         }
     }
