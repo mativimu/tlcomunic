@@ -1,8 +1,10 @@
 package com.tlcomunic.aut.domain;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -68,6 +70,14 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name = "updated_at")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private Date updatedAt = new Date();
+
+    @Column(name = "created_at")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private Date createdAt = new Date();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
