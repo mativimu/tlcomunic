@@ -2,11 +2,13 @@ package com.tlcomunic.aut.dto;
 
 import java.lang.reflect.Field;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterInput {
     
     private String firstName;

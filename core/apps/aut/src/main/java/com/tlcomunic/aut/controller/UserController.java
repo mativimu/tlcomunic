@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tlcomunic.aut.domain.User;
 import com.tlcomunic.aut.dto.AuthInput;
 import com.tlcomunic.aut.dto.AuthOutput;
@@ -24,6 +26,7 @@ import com.tlcomunic.aut.dto.UpdateEmailInput;
 import com.tlcomunic.aut.dto.UpdateNameInput;
 import com.tlcomunic.aut.dto.UpdatePassInput;
 import com.tlcomunic.aut.dto.UpdateRoleInput;
+import com.tlcomunic.aut.dto.UsersOutput;
 import com.tlcomunic.aut.service.UserService;
 import com.tlcomunic.aut.service.impl.JsonWebTokenService;
 import com.tlcomunic.aut.util.DTOFactory;
@@ -37,6 +40,8 @@ public class UserController {
     private DTOFactory dtoFactory;
     
     private JsonWebTokenService jsonWebTokenService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
     
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
@@ -74,8 +79,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getUsers() {
+
+        User[] users = userService.getUsers();
+
+        UsersOutput outputDTO = UsersOutput.builder()
+            .users(users)
+            .build();
+        
+            return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+    }
     @PutMapping("/update/email")
-    public ResponseEntity<?> updateEmail(@RequestParam(name="email") String email, UpdateEmailInput inputDTO) {
+    public ResponseEntity<?> updateEmail(@RequestParam(name="email") String email, @RequestBody UpdateEmailInput inputDTO) {
 
         User user = userService.updateEmail(email, inputDTO.getEmail());
 
@@ -103,9 +119,11 @@ public class UserController {
     }
 
     @PutMapping("/update/name")
-    public ResponseEntity<?> updateName(@RequestParam(name="email") String email, UpdateNameInput inputDTO) {
+    public ResponseEntity<?> updateName(@RequestParam(name="email") String email, @RequestBody UpdateNameInput inputDTO) throws JsonProcessingException {
 
-        User user = userService.updateName(email, inputDTO.getFisrtName(), inputDTO.getLastName());
+//        LOG.info("Input JSON at /update/name\n".concat(objectMapper.writeValueAsString(inputDTO)));
+
+        User user = userService.updateName(email, inputDTO.getFirstName(), inputDTO.getLastName());
 
         LOG.info("User[{}] updated on name", String.valueOf(user.getId()), user.getRole());
 
@@ -117,7 +135,7 @@ public class UserController {
     }
 
     @PutMapping("/update/role")
-    public ResponseEntity<?> updateRole(@RequestParam(name="email") String email, UpdateRoleInput inputDTO) {
+    public ResponseEntity<?> updateRole(@RequestParam(name="email") String email, @RequestBody UpdateRoleInput inputDTO) {
 
         User user = userService.updateRole(email, inputDTO.getRole());
 

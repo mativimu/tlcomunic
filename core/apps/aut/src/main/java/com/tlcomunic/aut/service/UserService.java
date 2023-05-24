@@ -7,6 +7,8 @@ public interface UserService {
 
     public User create(User user);
 
+    public User[] getUsers();
+
     public User getByEmail(String email);
     
     public User getByCredentials(String email, String password);

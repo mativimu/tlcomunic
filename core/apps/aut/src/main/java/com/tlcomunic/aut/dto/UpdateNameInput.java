@@ -1,12 +1,14 @@
 package com.tlcomunic.aut.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateNameInput {
     
-    private String fisrtName;
+    private String firstName;
     private String lastName;
 }

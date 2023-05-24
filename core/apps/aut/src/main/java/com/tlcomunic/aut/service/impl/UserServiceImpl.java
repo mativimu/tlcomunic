@@ -1,6 +1,8 @@
 package com.tlcomunic.aut.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -11,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tlcomunic.aut.domain.User;
 import com.tlcomunic.aut.repository.UserRepository;
 import com.tlcomunic.aut.service.UserService;
-
-import lombok.var;
 
 import com.tlcomunic.aut.enums.Role;
 import com.tlcomunic.aut.exception.IncorrectPasswordException;
@@ -39,10 +39,21 @@ public class UserServiceImpl implements UserService {
         if (_user.isPresent())
             throw new UserAlreadyExistsException();
             
-        else
+        else {
+            user.setCreatedAt(new Date());
+            user.setUpdatedAt(new Date());
             return userRepository.save(user);
+        }
     }
     
+    @Override
+    public User[] getUsers() {
+
+        List<User> users = userRepository.findAll();
+
+        return users.toArray(new User[users.size()]);
+    }
+
     @Override
     public User getByEmail(String email) {
         
