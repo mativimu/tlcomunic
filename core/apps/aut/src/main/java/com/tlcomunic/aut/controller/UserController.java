@@ -59,7 +59,7 @@ public class UserController {
             LOG.info("User[{}] created as {}", String.valueOf(user.getId()), user.getRole());
     
             String token = jsonWebTokenService.generate(user);
-            String code = "#".concat(user.getRole().name().substring(0, 2));
+            String code = "#00".concat(user.getRole().name().substring(0, 2));
             RegisterOutput outputDTO = RegisterOutput.builder().code(code).token(token).build();
     
             return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
