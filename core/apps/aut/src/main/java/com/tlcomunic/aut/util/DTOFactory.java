@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.tlcomunic.aut.domain.User;
 import com.tlcomunic.aut.dto.RegisterInput;
 import com.tlcomunic.aut.enums.Role;
+import com.tlcomunic.aut.exception.NullValuesException;
 
 @Component
 public class DTOFactory {
@@ -13,7 +14,7 @@ public class DTOFactory {
     public User getUser(RegisterInput inputDTO) {
 
         if (inputDTO.anyFieldIsNull())
-            throw new RuntimeException("There are null values");   
+            throw new NullValuesException();   
         else 
             return User.builder()
                 .firstName(inputDTO.getFirstName())
