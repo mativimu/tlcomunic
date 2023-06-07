@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.tlcomunic.aut.dto.ErrorDTO;
 import com.tlcomunic.aut.exception.UserNotFoundException;
-import com.tlcomunic.aut.exception.IncorrectPasswordException;
+import com.tlcomunic.aut.exception.InvalidPasswordException;
 import com.tlcomunic.aut.exception.UserAlreadyExistsException;
 import com.tlcomunic.aut.exception.NullValuesException;
 
@@ -25,7 +25,7 @@ public class ControllerAdvicer {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
     }
 
-    @ExceptionHandler(value = IncorrectPasswordException.class)
+    @ExceptionHandler(value = InvalidPasswordException.class)
     public ResponseEntity<ErrorDTO> incorrectPasswordException() {
         ErrorDTO err = ErrorDTO.builder()
             .code("ERR02")

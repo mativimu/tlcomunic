@@ -50,27 +50,27 @@ public class UserController {
         this.dtoFactory = dtoFactory;
         this.jsonWebTokenService = jsonWebTokenService;
     }
-    
-        @PostMapping("/register")
-        public ResponseEntity<?> register(@RequestBody RegisterInput inputDTO) {
-    
-            User user = userService.create(dtoFactory.getUser(inputDTO));
-    
-            LOG.info("User[{}] created as {}", String.valueOf(user.getId()), user.getRole());
-    
-            String token = jsonWebTokenService.generate(user);
-            String code = "#00".concat(user.getRole().name().substring(0, 2));
-            RegisterOutput outputDTO = RegisterOutput.builder().code(code).token(token).build();
-    
-            return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-        }
 
-    @GetMapping("/authenticate")
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterInput inputDTO) {
+
+        User user = userService.create(dtoFactory.getUser(inputDTO));
+
+        LOG.info("user[{}] created as {}", String.valueOf(user.getId()), user.getEmail());
+
+        String token = jsonWebTokenService.generate(user);
+        String code = "#00".concat(user.getRole().name().substring(0, 2));
+        RegisterOutput outputDTO = RegisterOutput.builder().code(code).token(token).build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+    }
+
+    @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthInput inputDTO) {
 
         User user = userService.getByCredentials(inputDTO.getEmail(), inputDTO.getPassword());
 
-        LOG.info("User[{}] authenticated",String.valueOf(user.getId()));
+        LOG.info("user[{}] authenticated",String.valueOf(user.getId()));
         
         String token = jsonWebTokenService.generate(user);
         String scope = "#00".concat(user.getRole().name().substring(0, 2));
@@ -95,7 +95,7 @@ public class UserController {
 
         User user = userService.updateEmail(email, inputDTO.getEmail());
 
-        LOG.info("User[{}] updated on email", String.valueOf(user.getId()), user.getRole());
+        LOG.info("user[{}] updated on email", String.valueOf(user.getId()), user.getRole());
 
         MessageOutput outputDTO = MessageOutput.builder()
             .message("Email updated successfully")
@@ -109,7 +109,7 @@ public class UserController {
 
         User user = userService.updatePassword(email, inputDTO.getPassword());
 
-        LOG.info("User[{}] updated on password", String.valueOf(user.getId()), user.getRole());
+        LOG.info("user[{}] updated on password", String.valueOf(user.getId()), user.getRole());
 
         MessageOutput outputDTO = MessageOutput.builder()
             .message("Password updated successfully")
@@ -125,7 +125,7 @@ public class UserController {
 
         User user = userService.updateName(email, inputDTO.getFirstName(), inputDTO.getLastName());
 
-        LOG.info("User[{}] updated on name", String.valueOf(user.getId()), user.getRole());
+        LOG.info("user[{}] updated on name", String.valueOf(user.getId()), user.getRole());
 
         MessageOutput outputDTO = MessageOutput.builder()
             .message("Name updated successfully")
@@ -139,7 +139,7 @@ public class UserController {
 
         User user = userService.updateRole(email, inputDTO.getRole());
 
-        LOG.info("User[{}] updated on role", String.valueOf(user.getId()), user.getRole());
+        LOG.info("user[{}] updated on role", String.valueOf(user.getId()), user.getRole());
 
         MessageOutput outputDTO = MessageOutput.builder()
             .message("Role updated successfully")
@@ -153,7 +153,7 @@ public class UserController {
 
         User user = userService.enable(email);
 
-        LOG.info("User[{}] enable", String.valueOf(user.getId()), user.getRole());
+        LOG.info("user[{}] enable", String.valueOf(user.getId()), user.getRole());
 
         MessageOutput outputDTO = MessageOutput.builder()
             .message("User enable successfully")
@@ -167,7 +167,7 @@ public class UserController {
 
         User user = userService.disable(email);
 
-        LOG.info("User[{}] disable", String.valueOf(user.getId()), user.getRole());
+        LOG.info("user[{}] disable", String.valueOf(user.getId()), user.getRole());
 
         MessageOutput outputDTO = MessageOutput.builder()
             .message("User disable successfully")

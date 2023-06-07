@@ -15,7 +15,7 @@ import com.tlcomunic.aut.repository.UserRepository;
 import com.tlcomunic.aut.service.UserService;
 import com.tlcomunic.aut.util.PasswordHasher;
 import com.tlcomunic.aut.enums.Role;
-import com.tlcomunic.aut.exception.IncorrectPasswordException;
+import com.tlcomunic.aut.exception.InvalidPasswordException;
 import com.tlcomunic.aut.exception.NullValuesException;
 import com.tlcomunic.aut.exception.UserAlreadyExistsException;
 import com.tlcomunic.aut.exception.UserNotFoundException;
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException();
 
         else if (!_user.get().getPassword().equals(PasswordHasher.hash(password)))
-            throw new IncorrectPasswordException();
+            throw new InvalidPasswordException();
         
         else
             return _user.get();
