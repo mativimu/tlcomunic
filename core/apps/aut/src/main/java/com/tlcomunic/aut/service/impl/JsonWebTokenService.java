@@ -27,7 +27,7 @@ public class JsonWebTokenService implements TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
             .issuer("Self")
             .issuedAt(now)
-            .expiresAt(now.plus(1L, ChronoUnit.HOURS))
+            .expiresAt(now.plus(15L, ChronoUnit.MINUTES))
             .claim("Role", user.getRole())
             .subject(user.getFirstName().concat(" ").concat(user.getLastName()))
             .build();
