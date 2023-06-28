@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateEmailInput {
-    
-    private String email;
+
+	private String email;
 
 }

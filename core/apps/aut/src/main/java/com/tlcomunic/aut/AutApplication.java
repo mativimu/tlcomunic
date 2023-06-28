@@ -24,22 +24,9 @@ public class AutApplication {
 	@Bean
 	CommandLineRunner run(UserRepository userRepository) {
 		return args -> {
-			userRepository.save (
-				new User (
-					null,
-					"mati",
-					"vimu",
-					"mativimu@gmail.com",
-					"e6808a56aad66cf89b43388ef3d0f021206594399dcd6c1b70d8382a1dae402b",
-					true,
-					Role.ADMIN,
-					true,
-					true,
-					true,
-					new Date(),
-					new Date()
-				)
-			);
+			userRepository.save(new User(null, "mati", "vimu", "mativimu@gmail.com",
+					"e6808a56aad66cf89b43388ef3d0f021206594399dcd6c1b70d8382a1dae402b", true, Role.ADMIN, true, true,
+					true, new Date(), new Date()));
 		};
 	}
 }

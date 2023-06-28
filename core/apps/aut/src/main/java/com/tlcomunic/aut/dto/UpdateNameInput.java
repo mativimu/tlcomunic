@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateNameInput {
-    
-    private String firstName;
-    private String lastName;
+
+	private String firstName;
+	private String lastName;
 }

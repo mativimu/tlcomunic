@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class RegisterOutput {
-        
-    private String code;
-    private String token;
-    
+
+	private String code;
+	private String token;
+
 }

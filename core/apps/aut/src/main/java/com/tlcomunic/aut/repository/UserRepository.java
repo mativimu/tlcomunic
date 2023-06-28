@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.tlcomunic.aut.domain.User;
 
-public interface UserRepository extends JpaRepository<User, Long>{
-    
-    public Optional<User> findByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    public void deleteByEmail(String email);
+	public Optional<User> findByEmail(String email);
+
+	public void deleteByEmail(String email);
 }

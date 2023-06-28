@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeleteUserInput {
-    
-    private String email;
-    private String password;
-    
+
+	private String email;
+	private String password;
+
 }

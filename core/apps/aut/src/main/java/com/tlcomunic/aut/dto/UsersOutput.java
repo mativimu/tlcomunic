@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 @Builder
 public class UsersOutput {
-    
-    private User[] users;
+
+	private User[] users;
 }

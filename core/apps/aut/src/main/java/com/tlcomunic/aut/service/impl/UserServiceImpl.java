@@ -1,6 +1,5 @@
 package com.tlcomunic.aut.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -11,213 +10,209 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tlcomunic.aut.domain.User;
-import com.tlcomunic.aut.repository.UserRepository;
-import com.tlcomunic.aut.service.UserService;
-import com.tlcomunic.aut.util.PasswordHasher;
 import com.tlcomunic.aut.enums.Role;
 import com.tlcomunic.aut.exception.InvalidPasswordException;
 import com.tlcomunic.aut.exception.NullValuesException;
 import com.tlcomunic.aut.exception.UserAlreadyExistsException;
 import com.tlcomunic.aut.exception.UserNotFoundException;
+import com.tlcomunic.aut.repository.UserRepository;
+import com.tlcomunic.aut.service.UserService;
+import com.tlcomunic.aut.util.PasswordHasher;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserServiceImpl(final UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    
-    @Override
-    public User create(User user) {
-        
-        Optional<User> _user = userRepository.findByEmail(user.getEmail());
+	public UserServiceImpl(final UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-        if (_user.isPresent())
-            throw new UserAlreadyExistsException();
-            
-        else {
-            user.setCreatedAt(new Date());
-            user.setUpdatedAt(new Date());
-            user.setPassword(
-                PasswordHasher.hash(user.getPassword())
-            );
-            return userRepository.save(user);
-        }
-    }
-    
-    @Override
-    public User[] getUsers() {
+	@Override
+	public User create(User user) {
 
-        List<User> users = userRepository.findAll();
+		Optional<User> _user = userRepository.findByEmail(user.getEmail());
 
-        return users.toArray(new User[users.size()]);
-    }
+		if (_user.isPresent())
+			throw new UserAlreadyExistsException();
 
-    @Override
-    public User getByEmail(String email) {
-        
-        if (email == null)
-            throw new NullValuesException();
+		else {
+			user.setCreatedAt(new Date());
+			user.setUpdatedAt(new Date());
+			user.setPassword(PasswordHasher.hash(user.getPassword()));
+			return userRepository.save(user);
+		}
+	}
 
-        Optional<User> _user = userRepository.findByEmail(email);
+	@Override
+	public User[] getUsers() {
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
-        else
-            return _user.get();
-    }
-    
-    @Override
-    public User getByCredentials(String email, String password) {
+		List<User> users = userRepository.findAll();
 
-        if (email == null || password == null)
-            throw new NullValuesException();
+		return users.toArray(new User[users.size()]);
+	}
 
-        Optional<User> _user = userRepository.findByEmail(email);
+	@Override
+	public User getByEmail(String email) {
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
+		if (email == null)
+			throw new NullValuesException();
 
-        else if (!_user.get().getPassword().equals(PasswordHasher.hash(password)))
-            throw new InvalidPasswordException();
-        
-        else
-            return _user.get();
-    }
+		Optional<User> _user = userRepository.findByEmail(email);
 
-    @Transactional
-    @Override
-    public User updateEmail(String oldEmail, String newEmail) {
-        
-        if (oldEmail == null)
-            throw new NullValuesException();
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
+		else
+			return _user.get();
+	}
 
-        Optional<User> _user = userRepository.findByEmail(oldEmail);
+	@Override
+	public User getByCredentials(String email, String password) {
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
+		if (email == null || password == null)
+			throw new NullValuesException();
 
-        else {
-            _user.get().setEmail(newEmail);
-            _user.get().setUpdatedAt(new Date());
-            return userRepository.save(_user.get());
-        }
-    }
+		Optional<User> _user = userRepository.findByEmail(email);
 
-    @Transactional
-    @Override
-    public User updatePassword(String email, String password) {
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
 
-        if (email == null || password == null)
-            throw new NullValuesException();
+		else if (!_user.get().getPassword().equals(PasswordHasher.hash(password)))
+			throw new InvalidPasswordException();
 
-        Optional<User> _user = userRepository.findByEmail(email);
+		else
+			return _user.get();
+	}
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
-        
-        else {
-            _user.get().setPassword(
-                PasswordHasher.hash(_user.get().getPassword())
-            );
-            _user.get().setUpdatedAt(new Date());
-            return userRepository.save(_user.get());
-        }
-    }
+	@Transactional
+	@Override
+	public User updateEmail(String oldEmail, String newEmail) {
 
-    @Transactional
-    @Override
-    public User updateName(String email, String firstName, String lastName) {
+		if (oldEmail == null)
+			throw new NullValuesException();
 
-        if (email == null || firstName == null || lastName == null)
-            throw new NullValuesException();
+		Optional<User> _user = userRepository.findByEmail(oldEmail);
 
-        Optional<User> _user = userRepository.findByEmail(email);
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
-    
-        else {
-            _user.get().setFirstName(firstName);
-            _user.get().setLastName(lastName);
-            _user.get().setUpdatedAt(new Date());
-            return userRepository.save(_user.get());
-        }
-    }
+		else {
+			_user.get().setEmail(newEmail);
+			_user.get().setUpdatedAt(new Date());
+			return userRepository.save(_user.get());
+		}
+	}
 
-    @Transactional
-    @Override
-    public User updateRole(String email, Role role) {
+	@Transactional
+	@Override
+	public User updatePassword(String email, String password) {
 
-        if (email == null || role == null )
-            throw new NullValuesException();
+		if (email == null || password == null)
+			throw new NullValuesException();
 
-        Optional<User> _user = userRepository.findByEmail(email);
+		Optional<User> _user = userRepository.findByEmail(email);
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
-    
-        else {
-            _user.get().setRole(role);
-            _user.get().setUpdatedAt(new Date());
-            return userRepository.save(_user.get());
-        }
-    }
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
 
-    @Transactional
-    @Override
-    public User enable(String email) {
-        
-        if (email == null)
-            throw new NullValuesException();
+		else {
+			_user.get().setPassword(PasswordHasher.hash(_user.get().getPassword()));
+			_user.get().setUpdatedAt(new Date());
+			return userRepository.save(_user.get());
+		}
+	}
 
-        Optional<User> _user = userRepository.findByEmail(email);
+	@Transactional
+	@Override
+	public User updateName(String email, String firstName, String lastName) {
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
+		if (email == null || firstName == null || lastName == null)
+			throw new NullValuesException();
 
-        else {
-            _user.get().setEnable(true);
-            _user.get().setUpdatedAt(new Date());
-            return userRepository.save(_user.get());
-        }
-    }
+		Optional<User> _user = userRepository.findByEmail(email);
 
-    @Transactional
-    @Override
-    public User disable(String email) {
-        
-        if (email == null)
-            throw new NullValuesException();
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
 
-        Optional<User> _user = userRepository.findByEmail(email);
+		else {
+			_user.get().setFirstName(firstName);
+			_user.get().setLastName(lastName);
+			_user.get().setUpdatedAt(new Date());
+			return userRepository.save(_user.get());
+		}
+	}
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
+	@Transactional
+	@Override
+	public User updateRole(String email, Role role) {
 
-        else {
-            _user.get().setEnable(false);
-            _user.get().setUpdatedAt(new Date());
-            return userRepository.save(_user.get());
-        }
-    }
+		if (email == null || role == null)
+			throw new NullValuesException();
 
-    @Transactional
-    @Override
-    public void deleteByEmail(String email) {
+		Optional<User> _user = userRepository.findByEmail(email);
 
-        Optional<User> _user = userRepository.findByEmail(email);
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
 
-        if (!_user.isPresent())
-            throw new UserNotFoundException();
+		else {
+			_user.get().setRole(role);
+			_user.get().setUpdatedAt(new Date());
+			return userRepository.save(_user.get());
+		}
+	}
 
-        else
-            LOG.info("User[{}] has been deleted", _user.get().getId());
-            userRepository.deleteByEmail(email);
-    }
+	@Transactional
+	@Override
+	public User enable(String email) {
+
+		if (email == null)
+			throw new NullValuesException();
+
+		Optional<User> _user = userRepository.findByEmail(email);
+
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
+
+		else {
+			_user.get().setEnable(true);
+			_user.get().setUpdatedAt(new Date());
+			return userRepository.save(_user.get());
+		}
+	}
+
+	@Transactional
+	@Override
+	public User disable(String email) {
+
+		if (email == null)
+			throw new NullValuesException();
+
+		Optional<User> _user = userRepository.findByEmail(email);
+
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
+
+		else {
+			_user.get().setEnable(false);
+			_user.get().setUpdatedAt(new Date());
+			return userRepository.save(_user.get());
+		}
+	}
+
+	@Transactional
+	@Override
+	public void deleteByEmail(String email) {
+
+		Optional<User> _user = userRepository.findByEmail(email);
+
+		if (!_user.isPresent())
+			throw new UserNotFoundException();
+
+		else
+			LOG.info("User[{}] has been deleted", _user.get().getId());
+		userRepository.deleteByEmail(email);
+	}
 
 }

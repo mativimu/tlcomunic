@@ -30,88 +30,82 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="_user")
+@Table(name = "_user")
 public class User implements UserDetails {
 
-    @Id
-    @SequenceGenerator(
-        name = "uid_sequence",
-        sequenceName = "uid_sequence",
-        allocationSize = 1
-    )
-    @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "uid_sequence")
-    private Long id;
+	@Id
+	@SequenceGenerator(name = "uid_sequence", sequenceName = "uid_sequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uid_sequence")
+	private Long id;
 
-    @Column(name = "first_name", nullable = false, length = 25)
-    private String firstName;
+	@Column(name = "first_name", nullable = false, length = 25)
+	private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 25)
-    private String lastName;
+	@Column(name = "last_name", nullable = false, length = 25)
+	private String lastName;
 
-    @Column(name = "email", unique = true, nullable = false, length = 64)
-    private String email;
-    
-    @Column(name = "password", unique = true, nullable = false, length = 64)
-    private String password;
-    
-    @Column(name = "enable", nullable = false)
-    private boolean enable;
+	@Column(name = "email", unique = true, nullable = false, length = 64)
+	private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role;
+	@Column(name = "password", unique = true, nullable = false, length = 64)
+	private String password;
 
-    @Column(name = "account_non_expired")
-    private boolean accountNonExpired = true;
+	@Column(name = "enable", nullable = false)
+	private boolean enable;
 
-    @Column(name = "account_non_locked")
-    private boolean accountNonLocked = true;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "role", nullable = false)
+	private Role role;
 
-    @Column(name = "credentials_non_expired")
-    private boolean credentialsNonExpired = true;
+	@Column(name = "account_non_expired")
+	private boolean accountNonExpired = true;
 
-    @Column(name = "updated_at")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date updatedAt = new Date();
+	@Column(name = "account_non_locked")
+	private boolean accountNonLocked = true;
 
-    @Column(name = "created_at")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date createdAt = new Date();
+	@Column(name = "credentials_non_expired")
+	private boolean credentialsNonExpired = true;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
+	@Column(name = "updated_at")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private Date updatedAt = new Date();
 
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
+	@Column(name = "created_at")
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private Date createdAt = new Date();
 
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority(role.name()));
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return this.accountNonExpired;
-    }
+	@Override
+	public String getPassword() {
+		return this.password;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return this.accountNonLocked;
-    }
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return this.credentialsNonExpired;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return this.accountNonExpired;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return this.enable;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return this.accountNonLocked;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return this.credentialsNonExpired;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return this.enable;
+	}
 }

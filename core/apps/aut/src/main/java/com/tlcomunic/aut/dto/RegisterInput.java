@@ -10,33 +10,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterInput {
-    
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private boolean enable;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private String role;
 
-    public boolean anyFieldIsNull() {
-        Field[] fields = this.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String password;
+	private boolean enable;
+	private boolean accountNonExpired;
+	private boolean accountNonLocked;
+	private boolean credentialsNonExpired;
+	private String role;
 
-            try {
-                Object value = field.get(this);
-                if (value == null) {
-                    return true;
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+	public boolean anyFieldIsNull() {
+		Field[] fields = this.getClass().getDeclaredFields();
+		for (Field field : fields) {
+			field.setAccessible(true);
 
-        return false;
-    }
-    
+			try {
+				Object value = field.get(this);
+				if (value == null) {
+					return true;
+				}
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return false;
+	}
+
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class MessageOutput {
-    
-    private String message;
-    
+
+	private String message;
+
 }

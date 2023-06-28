@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class AuthOutput {
-    
-    private String scope;
-    private String token;
-    
+
+	private String scope;
+	private String token;
+
 }

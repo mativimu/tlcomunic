@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateRoleInput {
 
-    private Role role;   
+	private Role role;
 }

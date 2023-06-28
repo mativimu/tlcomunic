@@ -35,158 +35,148 @@ import com.tlcomunic.aut.util.DTOFactory;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserService userService;
+	private UserService userService;
 
-    private DTOFactory dtoFactory;
-    
-    private JsonWebTokenService jsonWebTokenService;
+	private DTOFactory dtoFactory;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-    
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+	private JsonWebTokenService jsonWebTokenService;
 
-    public UserController(final UserService userService, final DTOFactory dtoFactory, final JsonWebTokenService jsonWebTokenService) {
-        this.userService = userService;
-        this.dtoFactory = dtoFactory;
-        this.jsonWebTokenService = jsonWebTokenService;
-    }
+	private ObjectMapper objectMapper = new ObjectMapper();
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterInput inputDTO) {
+	private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
-        User user = userService.create(dtoFactory.getUser(inputDTO));
+	public UserController(final UserService userService, final DTOFactory dtoFactory,
+			final JsonWebTokenService jsonWebTokenService) {
+		this.userService = userService;
+		this.dtoFactory = dtoFactory;
+		this.jsonWebTokenService = jsonWebTokenService;
+	}
 
-        LOG.info("user[{}] created as {}", String.valueOf(user.getId()), user.getEmail());
+	@PostMapping("/register")
+	public ResponseEntity<?> register(@RequestBody RegisterInput inputDTO) {
 
-        String token = jsonWebTokenService.generate(user);
-        String code = "#00".concat(user.getRole().name().substring(0, 2));
-        RegisterOutput outputDTO = RegisterOutput.builder().code(code).token(token).build();
+		User user = userService.create(dtoFactory.getUser(inputDTO));
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-    }
+		LOG.info("user[{}] created as {}", String.valueOf(user.getId()), user.getEmail());
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(@RequestBody AuthInput inputDTO) {
+		String token = jsonWebTokenService.generate(user);
+		String code = "#00".concat(user.getRole().name().substring(0, 2));
+		RegisterOutput outputDTO = RegisterOutput.builder().code(code).token(token).build();
 
-        User user = userService.getByCredentials(inputDTO.getEmail(), inputDTO.getPassword());
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 
-        LOG.info("user[{}] authenticated",String.valueOf(user.getId()));
-        
-        String token = jsonWebTokenService.generate(user);
-        String scope = "#00".concat(user.getRole().name().substring(0, 2));
-        AuthOutput outputDTO = AuthOutput.builder().scope(scope).token(token).build();
+	@PostMapping("/authenticate")
+	public ResponseEntity<?> authenticate(@RequestBody AuthInput inputDTO) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-    }
+		User user = userService.getByCredentials(inputDTO.getEmail(), inputDTO.getPassword());
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getUsers() {
+		LOG.info("user[{}] authenticated", String.valueOf(user.getId()));
 
-        User[] users = userService.getUsers();
+		String token = jsonWebTokenService.generate(user);
+		String scope = "#00".concat(user.getRole().name().substring(0, 2));
+		AuthOutput outputDTO = AuthOutput.builder().scope(scope).token(token).build();
 
-        UsersOutput outputDTO = UsersOutput.builder()
-            .users(users)
-            .build();
-        
-            return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-    }
-    @PutMapping("/update/email")
-    public ResponseEntity<?> updateEmail(@RequestParam(name="email") String email, @RequestBody UpdateEmailInput inputDTO) {
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 
-        User user = userService.updateEmail(email, inputDTO.getEmail());
+	@GetMapping("/all")
+	public ResponseEntity<?> getUsers() {
 
-        LOG.info("user[{}] updated on email", String.valueOf(user.getId()), user.getRole());
+		User[] users = userService.getUsers();
 
-        MessageOutput outputDTO = MessageOutput.builder()
-            .message("Email updated successfully")
-            .build();
+		UsersOutput outputDTO = UsersOutput.builder().users(users).build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-    }
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 
-    @PutMapping("/update/password")
-    public ResponseEntity<?> updatePassowrd(@RequestParam(name="email") String email, @RequestBody UpdatePassInput inputDTO ) {
+	@PutMapping("/update/email")
+	public ResponseEntity<?> updateEmail(@RequestParam(name = "email") String email,
+			@RequestBody UpdateEmailInput inputDTO) {
 
-        User user = userService.updatePassword(email, inputDTO.getPassword());
+		User user = userService.updateEmail(email, inputDTO.getEmail());
 
-        LOG.info("user[{}] updated on password", String.valueOf(user.getId()), user.getRole());
+		LOG.info("user[{}] updated on email", String.valueOf(user.getId()), user.getRole());
 
-        MessageOutput outputDTO = MessageOutput.builder()
-            .message("Password updated successfully")
-            .build();
+		MessageOutput outputDTO = MessageOutput.builder().message("Email updated successfully").build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-    }
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 
-    @PutMapping("/update/name")
-    public ResponseEntity<?> updateName(@RequestParam(name="email") String email, @RequestBody UpdateNameInput inputDTO) throws JsonProcessingException {
+	@PutMapping("/update/password")
+	public ResponseEntity<?> updatePassowrd(@RequestParam(name = "email") String email,
+			@RequestBody UpdatePassInput inputDTO) {
+
+		User user = userService.updatePassword(email, inputDTO.getPassword());
+
+		LOG.info("user[{}] updated on password", String.valueOf(user.getId()), user.getRole());
+
+		MessageOutput outputDTO = MessageOutput.builder().message("Password updated successfully").build();
+
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
+
+	@PutMapping("/update/name")
+	public ResponseEntity<?> updateName(@RequestParam(name = "email") String email,
+			@RequestBody UpdateNameInput inputDTO) throws JsonProcessingException {
 
 //        LOG.info("Input JSON at /update/name\n".concat(objectMapper.writeValueAsString(inputDTO)));
 
-        User user = userService.updateName(email, inputDTO.getFirstName(), inputDTO.getLastName());
+		User user = userService.updateName(email, inputDTO.getFirstName(), inputDTO.getLastName());
 
-        LOG.info("user[{}] updated on name", String.valueOf(user.getId()), user.getRole());
+		LOG.info("user[{}] updated on name", String.valueOf(user.getId()), user.getRole());
 
-        MessageOutput outputDTO = MessageOutput.builder()
-            .message("Name updated successfully")
-            .build();
+		MessageOutput outputDTO = MessageOutput.builder().message("Name updated successfully").build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);    
-    }
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 
-    @PutMapping("/update/role")
-    public ResponseEntity<?> updateRole(@RequestParam(name="email") String email, @RequestBody UpdateRoleInput inputDTO) {
+	@PutMapping("/update/role")
+	public ResponseEntity<?> updateRole(@RequestParam(name = "email") String email,
+			@RequestBody UpdateRoleInput inputDTO) {
 
-        User user = userService.updateRole(email, inputDTO.getRole());
+		User user = userService.updateRole(email, inputDTO.getRole());
 
-        LOG.info("user[{}] updated on role", String.valueOf(user.getId()), user.getRole());
+		LOG.info("user[{}] updated on role", String.valueOf(user.getId()), user.getRole());
 
-        MessageOutput outputDTO = MessageOutput.builder()
-            .message("Role updated successfully")
-            .build();
+		MessageOutput outputDTO = MessageOutput.builder().message("Role updated successfully").build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);    
-    }
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 
-    @PutMapping("/enable")
-    public ResponseEntity<?> enable(@RequestParam(name="email") String email) {
+	@PutMapping("/enable")
+	public ResponseEntity<?> enable(@RequestParam(name = "email") String email) {
 
-        User user = userService.enable(email);
+		User user = userService.enable(email);
 
-        LOG.info("user[{}] enable", String.valueOf(user.getId()), user.getRole());
+		LOG.info("user[{}] enable", String.valueOf(user.getId()), user.getRole());
 
-        MessageOutput outputDTO = MessageOutput.builder()
-            .message("User enable successfully")
-            .build();
+		MessageOutput outputDTO = MessageOutput.builder().message("User enable successfully").build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);    
-    }
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 
-    @PutMapping("/disable")
-    public ResponseEntity<?> disable(@RequestParam(name="email") String email) {
+	@PutMapping("/disable")
+	public ResponseEntity<?> disable(@RequestParam(name = "email") String email) {
 
-        User user = userService.disable(email);
+		User user = userService.disable(email);
 
-        LOG.info("user[{}] disable", String.valueOf(user.getId()), user.getRole());
+		LOG.info("user[{}] disable", String.valueOf(user.getId()), user.getRole());
 
-        MessageOutput outputDTO = MessageOutput.builder()
-            .message("User disable successfully")
-            .build();
+		MessageOutput outputDTO = MessageOutput.builder().message("User disable successfully").build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO); 
-    }
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody DeleteUserInput inputDTO) {
+	@DeleteMapping("/delete")
+	public ResponseEntity<?> delete(@RequestBody DeleteUserInput inputDTO) {
 
-        User user = userService.getByCredentials(inputDTO.getEmail(), inputDTO.getPassword());
+		User user = userService.getByCredentials(inputDTO.getEmail(), inputDTO.getPassword());
 
-        userService.deleteByEmail(user.getEmail());
+		userService.deleteByEmail(user.getEmail());
 
-        MessageOutput outputDTO = MessageOutput.builder()
-            .message("User deleted successfully")
-            .build();
+		MessageOutput outputDTO = MessageOutput.builder().message("User deleted successfully").build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
-    }
+		return ResponseEntity.status(HttpStatus.OK).body(outputDTO);
+	}
 }
